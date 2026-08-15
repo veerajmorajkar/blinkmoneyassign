@@ -1,77 +1,77 @@
 # BlinkMoney
 
-A React Native take-home for BlinkMoney: a working rebuild of the liquid wealth account, with one extra loop that the live app does not really let you *feel*.
+Frontend assignment for BlinkMoney. React Native prototype of their liquid wealth account: daily SIP, stay invested, borrow without selling.
 
-This is a prototype on mock data. It is not a production build, and it does not claim to forecast markets.
+Mock data only. Nothing here is a real trade or a market forecast.
 
 <p>
-  <img src="docs/screenshots/home-momentum.png" alt="Home — Wealth Momentum" width="280" />
+  <img src="docs/screenshots/home-momentum.png" alt="Home and Wealth Momentum" width="240" />
   &nbsp;
-  <img src="docs/screenshots/stress-test.png" alt="Wealth Stress Test" width="280" />
+  <img src="docs/screenshots/save.png" alt="Save, daily SIP" width="240" />
   &nbsp;
-  <img src="docs/screenshots/wealth-circle.png" alt="Wealth Circle" width="280" />
+  <img src="docs/screenshots/stress-test.png" alt="Wealth Stress Test" width="240" />
+  &nbsp;
+  <img src="docs/screenshots/wealth-circle.png" alt="Wealth Circle" width="240" />
 </p>
 
-## The gap
+## What felt off in the live app
 
-BlinkMoney’s product is unusually clear: one account, daily SIP, money stays invested, borrow against it without selling. Save → Grow → Borrow is the whole story.
+The product idea is simple. One account. Save, grow, borrow. Units do not get sold when you take credit.
 
-The live app, at least as it stands today, does not quite tell that story. Home still reads like a landing page — promo, help, grids — while the actual jobs (today’s SIP, how far you are from credit, what happens if the decade is quieter than 15%) sit in the background. You can *read* the loop. It is harder to *use* it.
+The app I downloaded did not make that easy to see. Home felt like a marketing page. Promo cards, help, extra grids. The useful bits (today’s SIP, how close you are to unlocking credit, what a weaker decade does to the plan) were easy to miss.
 
-I kept their palette (black + lime `#A3E635`) and the tab jobs. I did not copy the marketing chrome. The work is a quieter shell plus a few interactions that make the loop visible.
+I kept their colours (black and lime `#A3E635`) and the same jobs in the tabs. I did not rebuild the marketing layout. I tried to make the loop something you can actually tap through.
 
-## Why not another dashboard
+## Why I did not ship another portfolio screen
 
-The brief asked for something that could move engagement, referral, or wealth gamification — and it asked for thinking that is not obvious.
+The brief asked for something that could move engagement, referral, or wealth gamification. It also asked for an idea that was not the first thing everyone would build.
 
-A portfolio screen with a pie and two line charts would have been the default. BlinkMoney is not a stock ticker. People already have Groww for that. What they do not have is a reason to keep the SIP on, a way to sit through a weak year without selling, and a way to bring someone else in without publishing their balance.
+A pie chart and two graphs would have been the obvious take. BlinkMoney is not Groww. People already have an app for “what am I holding.” What they do not have is a reason to keep the SIP running, a way to sit through a bad year without redeeming, and a way to invite a friend without posting their balance.
 
-So I built around behaviour, not allocation charts:
+So I built around habits, not allocation:
 
-| Feature | Outcome it is aiming at |
-| --- | --- |
-| Still Growing (Save → Grow → Borrow) | Wealth gamification — the loop as a mechanic |
-| Wealth Momentum + share | Engagement, and something you might send unprompted |
-| Wealth Circle | Referral without a coupon |
-| Stress Test | Engagement — come back and *do* something with the plan |
+- **Still Growing** (Save → Grow → Borrow) so the loop is visible
+- **Wealth Momentum** plus share, so you have a reason to open the app and something small to send
+- **Wealth Circle** for referral, without a coupon dump
+- **Stress Test** so you can poke the plan instead of staring at a static chart
 
-Scores on this app are heuristics, labelled as such. They are not NAV, credit scores, or predicted returns.
+The 0–100 numbers in the app are rough plan checks. They are labelled that way. They are not NAV and not a credit score.
 
 ## Features
 
 ### Still Growing
 
-Save, grow, and borrow as one ladder — not three products. You see today’s SIP, how much more invested unlocks credit, and that a draw is a lien, not a sale.
+Save, grow, and borrow on one ladder. You see the SIP, how much more invested unlocks credit, and that a draw is a lien (units stay invested).
 
-Implemented in `src/components/StillGrowing.tsx`, on Home. Save (`app/(tabs)/save.tsx`) and Borrow (`app/(tabs)/borrow.tsx`) are the two actions that feed it. The SIP calculator on Home is local; it does not quietly rewrite the wallet.
+Code: `src/components/StillGrowing.tsx` on Home. Save and Borrow are `app/(tabs)/save.tsx` and `app/(tabs)/borrow.tsx`. The calculator on Home only projects locally. It does not change the wallet behind your back.
 
 ### Wealth Momentum
 
-A single “how is this habit going?” read: consistency, growth, SIP discipline, and a next move (step the SIP). It is meant to answer “am I still in the loop?” in a few seconds, not to rank the user.
+One answer to “how is this going?” Consistency, growth, SIP discipline, and a next step (raise the SIP). Meant to be read in a few seconds.
 
-`src/components/WealthMomentum.tsx` on Home. Mock wallet in `src/data/store.tsx`.
+Code: `src/components/WealthMomentum.tsx` on Home. Wallet state lives in `src/data/store.tsx`.
 
 ### Share progress
 
-From Momentum (and again at the bottom of Stress Test) you can share a short card: streak, a score, SIP still on — not the full book. The share sheet is the OS one; there is no native share extension in this prototype.
+From Momentum, and again at the bottom of Stress Test, you can share streak and a score. Not the full portfolio. It uses the phone’s share sheet.
 
-Same component family; Stress Test uses `src/components/stress/ShareMomentumCard.tsx`.
+Stress Test card: `src/components/stress/ShareMomentumCard.tsx`.
 
 ### Wealth Circle
 
-Referral as a pair, not a gift box and a code on an empty screen. You add a friend and compare **habits** (Momentum, consistency) — never balances. The invite copy is built that way on purpose.
+Referral as a pair. You add a friend and compare habits (Momentum, consistency), not rupee balances. Invite text is written that way on purpose.
 
-`src/components/WealthCircle.tsx`, Rewards tab (`app/(tabs)/rewards.tsx`), teaser on Home.
+Code: `src/components/WealthCircle.tsx`. Rewards tab is `app/(tabs)/rewards.tsx`. There is a short teaser on Home.
 
 ### Wealth Stress Test
 
-The extra tab. One page: *if the next decade is quieter than 15% p.a.\*, what happens to this SIP — and what can I change?*
+Extra tab. One screen: if the next decade is quieter than the ~15% p.a.* they show, what happens to this SIP, and what can you change?
 
-You pick a path (Normal is their disclosed illustration; Dip / Severe are a shock, then recovery). The chart and the delay update on the same screen. You can raise the monthly equivalent, see the plan check move, and apply a step-up **to the simulation only**.
+You pick a path. Normal uses their disclosed illustration. Dip and Severe are a bad year or two, then recovery, not a forever crash. The chart and the delay update in place. You can raise SIP and apply a step-up to the **simulation only**.
 
-That is the out-of-the-box piece: not “here is your allocation,” but “here is how resilient the *plan* is, and here is the one lever you actually control.”
+This was the part I did not want to be “here is another graph.” It is “here is the plan under a worse path, and the lever you actually control.”
 
-`app/(tabs)/stress.tsx` → `src/components/stress/`. Math is deterministic in `src/stress/calc.ts`.
+Code: `app/(tabs)/stress.tsx` and `src/components/stress/`. Numbers come from `src/stress/calc.ts`.
 
 ## Run
 
@@ -80,18 +80,18 @@ npm install
 npx expo start
 ```
 
-Then iOS simulator, Android emulator, or Expo Go. Web: `npx expo start --web`.
+iOS simulator, Android emulator, or Expo Go. For web: `npx expo start --web`.
 
 ## Stack
 
-Expo SDK 57, Expo Router, TypeScript, Reanimated, Gesture Handler, `react-native-svg`. No backend.
+Expo SDK 57, Expo Router, TypeScript, Reanimated, Gesture Handler, react-native-svg. No backend.
 
 ```
 app/                   screens
 src/theme.ts           colour and type
 src/data/store.tsx     mock wallet
-src/stress/calc.ts     scenario paths
+src/stress/calc.ts     scenario math
 src/components/        UI
 ```
 
-Notes on money copy, empty states, and Android quirks: [docs/EDGE_CASES.md](./docs/EDGE_CASES.md). Visual rules: [docs/DESIGN.md](./docs/DESIGN.md).
+More on empty states and money copy: [docs/EDGE_CASES.md](./docs/EDGE_CASES.md). Visual notes: [docs/DESIGN.md](./docs/DESIGN.md).
