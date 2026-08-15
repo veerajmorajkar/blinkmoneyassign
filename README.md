@@ -75,6 +75,8 @@ Code: `app/(tabs)/stress.tsx` and `src/components/stress/`. Numbers come from `s
 
 ## Run
 
+**Working prototype (no login):** [https://veerajmorajkar.github.io/blinkmoneyassign/](https://veerajmorajkar.github.io/blinkmoneyassign/)
+
 ```sh
 npm install
 npx expo start
