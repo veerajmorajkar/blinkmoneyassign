@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Animated, Platform, Pressable, StyleSheet, useWindowDimensions, View } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -29,7 +29,37 @@ function metrics(screenWidth: number, insetBottom: number) {
 }
 
 export function tabBarReserve(screenWidth: number, insetBottom: number) {
-  return metrics(screenWidth, insetBottom).reserve;
+  const extra = Platform.OS === 'web' ? 28 : 0;
+  return metrics(screenWidth, insetBottom).reserve + extra;
+}
+
+/** Safari / Chrome on phone hide a chunk of 100vh under the browser toolbar. */
+function useWebToolbarLift() {
+  const [lift, setLift] = useState(0);
+
+  useEffect(() => {
+    if (Platform.OS !== 'web' || typeof window === 'undefined') return;
+    const vv = window.visualViewport;
+    const update = () => {
+      if (!vv) {
+        setLift(0);
+        return;
+      }
+      const hidden = Math.max(0, window.innerHeight - vv.height - vv.offsetTop);
+      setLift(hidden);
+    };
+    update();
+    vv?.addEventListener('resize', update);
+    vv?.addEventListener('scroll', update);
+    window.addEventListener('resize', update);
+    return () => {
+      vv?.removeEventListener('resize', update);
+      vv?.removeEventListener('scroll', update);
+      window.removeEventListener('resize', update);
+    };
+  }, []);
+
+  return lift;
 }
 
 function circleX(index: number, slotWidth: number, circleSize: number) {
@@ -48,7 +78,9 @@ export function TabBar({
 }) {
   const insets = useSafeAreaInsets();
   const { width } = useWindowDimensions();
+  const lift = useWebToolbarLift();
   const m = metrics(width, insets.bottom);
+  const bottomPad = Platform.OS === 'web' ? Math.max(insets.bottom, 16) : Math.max(insets.bottom, 18);
 
   const x = useRef(new Animated.Value(circleX(state.index, m.slotWidth, m.circleSize))).current;
   const scale = useRef(new Animated.Value(1)).current;
@@ -79,7 +111,16 @@ export function TabBar({
   return (
     <View
       pointerEvents="box-none"
-      style={[styles.outer, { height: fadeH, paddingBottom: Math.max(insets.bottom, 18) }]}
+      style={[
+        styles.outer,
+        {
+          height: fadeH,
+          paddingBottom: bottomPad,
+          bottom: lift,
+          zIndex: 100,
+        },
+        Platform.OS === 'web' ? styles.outerWeb : null,
+      ]}
     >
       <LinearGradient
         pointerEvents="none"
@@ -196,6 +237,9 @@ const styles = StyleSheet.create({
     right: 0,
     alignItems: 'center',
     justifyContent: 'flex-end',
+  },
+  outerWeb: {
+    position: 'fixed',
   },
   pill: {
     flexDirection: 'row',
