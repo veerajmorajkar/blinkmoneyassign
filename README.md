@@ -5,9 +5,13 @@ Frontend assignment for BlinkMoney. React Native prototype of their liquid wealt
 Mock data only. Nothing here is a real trade or a market forecast.
 
 <p>
+  <img src="docs/screenshots/home.png" alt="Home" width="240" />
+  &nbsp;
   <img src="docs/screenshots/home-momentum.png" alt="Home and Wealth Momentum" width="240" />
   &nbsp;
   <img src="docs/screenshots/save.png" alt="Save, daily SIP" width="240" />
+  &nbsp;
+  <img src="docs/screenshots/borrow.png" alt="Borrow, unlock credit without selling" width="240" />
   &nbsp;
   <img src="docs/screenshots/stress-test.png" alt="Wealth Stress Test" width="240" />
   &nbsp;

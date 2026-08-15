@@ -1,0 +1,36 @@
+id,category,edge_case,what_the_ui_does,status,code
+1,Money copy,~15% p.a. illustration read as a guaranteed return,Copy uses assumed / historical blended language plus T&C. Not framed as a promise.,handled,app/(tabs)/index.tsx
+2,Money copy,9.99% p.a. credit rate read as a locked offer,Borrow footer marks it as T&C. Rate is disclosed copy only.,handled,app/(tabs)/borrow.tsx
+3,Product language,User thinks a draw sells mutual fund units,Copy says lien / units stay invested. UI never says withdraw from MF.,handled,src/components/StillGrowing.tsx
+4,Borrow unlock,Invested below ₹25 000,Borrow shows progress to unlock. Draw controls are hidden. No fake credit line.,handled,app/(tabs)/borrow.tsx
+5,Borrow cap,Draw larger than 50% of invested minus amount already out,Reducer clamps the draw to remaining LTV. Credit left cannot go negative.,handled,src/data/store.tsx
+6,Borrow repay,Repay after a draw,Drawn amount clears to zero. Invested units are unchanged (never sold in mock state).,handled,src/data/store.tsx
+7,SIP limits,Daily SIP typed or stepped below ₹21 or above ₹50 000,Amount is clamped to ₹21–₹50 000 in the store and on Save steppers / pills.,handled,src/data/store.tsx
+8,SIP calculator,Home calculator mistaken for a live order,Projection is local only. It does not mutate invested / wallet.,handled,src/components/SipCalculator.tsx
+9,Stress copy,₹10L target read as a BlinkMoney goal product,Labelled as an illustrative target in calc comments and UI. Not a goal-date product.,handled,src/stress/calc.ts
+10,Stress scenarios,Correction / Severe read as a forever negative CAGR,Shock is 1–2 years then recovery rates. Not a permanent -4% path.,handled,src/stress/calc.ts
+11,Stress SIP,Raise SIP or step-up on Stress Test,Updates the simulation only. Does not place an order or change the live daily SIP.,handled,src/components/stress/StressTestPage.tsx
+12,Debit fail,Pending SIP marked failed,failSip sets pending to failed and drops Momentum. Retry restores active + Momentum. No live bank.,handled (mock),src/data/store.tsx
+13,Stress empty,No SIP and nothing invested,Empty state with a path to Save. Chart and scores are not shown.,handled,src/components/stress/StressTestPage.tsx
+14,Stress thin data,Streak under 3 days or invested under ₹500,Insufficient-data state. Current seed (₹18 400 / 14-day streak) skips this on first paint.,handled,src/components/stress/StressTestPage.tsx
+15,Stress first paint,Flash of unstyled numbers,Short skeleton then the live mock.,handled,src/components/stress/StressTestPage.tsx
+16,Share,User cancels the OS share sheet,Share promise is caught. App does not crash.,handled,src/components/WealthMomentum.tsx
+17,Share privacy,Share dumps full portfolio,Share text is streak + score only. Wealth Circle compares habits not balances.,handled,src/components/WealthCircle.tsx
+18,Circle invite,Empty friend name,Trimmed empty name falls back to a placeholder name so the pair still renders.,handled,src/data/store.tsx
+19,Circle empty,No friend added yet,Invite CTA and privacy copy. No fake peer list.,handled,src/components/WealthCircle.tsx
+20,Android,Reanimated % width on progress bars,Progress uses pixel width not %.,handled,src/components/Progress.tsx
+21,Android,SVG rings drawn off-centre,Ring charts set originX / originY.,handled,src/components/icons (ring usage)
+22,Android,Device with no vibrator,Haptics calls are swallowed.,handled,src/components/TabBarImpl.tsx
+23,Android,Share sheet missing a title,Share includes a title for the Android sheet.,handled,share call sites
+24,Android,Tab indicator flicker with elevation on a translating view,Indicator is transform-only.,handled,src/components/TabBarImpl.tsx
+25,Android,Keyboard covering Save amount,softwareKeyboardLayoutMode resize.,handled,app.json
+26,Layout,Small phones with five tabs,Pill keeps the 4-tab circle size. Slots get narrower. Icons do not shrink into dots.,handled,src/components/TabBarImpl.tsx
+27,Layout,Profile sitting on a tab,Profile is a stack screen so it does not reserve tab-bar padding.,handled,app/profile.tsx
+28,Layout,Web tab bar clipped by overflow,Web tab bar portals to document.body and is position:fixed.,handled,src/components/TabBar.web.tsx
+29,Session,Logout,Mock confirm then Home. No real session or token.,handled (mock),app/profile.tsx
+30,Theme,Light theme toggle,Control can cycle the label. App stays dark (product is black).,called out,app/profile.tsx
+31,Out of scope,KYC / PAN / bank linking,Not built. Assignment is a frontend mock.,out of scope,
+32,Out of scope,Live NAV / market hours / weekends,Illustration math only. No market calendar.,out of scope,src/stress/calc.ts
+33,Out of scope,Real pledge / lien status from a custodian,Copy explains lien. No pledge API.,out of scope,
+34,Out of scope,Offline queue for SIP / draw,No persistence beyond in-memory mock wallet.,out of scope,src/data/store.tsx
+35,Out of scope,RTL and landscape,Portrait dark UI only.,out of scope,
